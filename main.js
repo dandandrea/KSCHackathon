@@ -6,6 +6,7 @@ var mainState = {
 
     lunarGravity: 100,
     thrustUpAmount: 10,
+    thrustSidewaysAmount: 5,
     maxLandingVelocity: 75,
 
     preload: function() { 
@@ -79,9 +80,24 @@ var mainState = {
             this.lander.y = this.platforms[0].coordinates.y1 - this.lander.height;
         }
 
+        this.move();
+    },
+
+    move: function()
+    {
         if (this.cursors.up.isDown == true)
         {
             this.thrustUp();
+        }
+
+        if (this.cursors.left.isDown == true)
+        {
+            this.thrustLeft();
+        }
+
+        if (this.cursors.right.isDown == true)
+        {
+            this.thrustRight();
         }
     },
 
@@ -91,12 +107,22 @@ var mainState = {
         this.labelScore.text = this.score;  
     },
 
-    // Make the lander thrustUp 
+    // Make the lander thrust up
     thrustUp: function() {
-        // console.log("thrustUp()");
-
         // Add a vertical velocity to the lander
         this.lander.body.velocity.y += this.thrustUpAmount * -1;
+    },
+
+    // Make the lander thrust left
+    thrustLeft: function() {
+        // Add a vertical velocity to the lander
+        this.lander.body.velocity.x += this.thrustSidewaysAmount * -1;
+    },
+
+    // Make the lander thrust right
+    thrustRight: function() {
+        // Add a vertical velocity to the lander
+        this.lander.body.velocity.x += this.thrustSidewaysAmount;
     },
 
     // Restart the game
