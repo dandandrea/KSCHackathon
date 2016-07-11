@@ -6,7 +6,7 @@ function getPlatformCoordinates(canvasWidth, canvasHeight, platformWidth, maxYCo
 
     var platforms = new Array();
 
-    var platform1 = {'x1': 350, 'y1': 300, 'x2': 450, 'y2': 300};
+    var platform1 = {'x1': 50, 'y1': 500, 'x2': 200, 'y2': 500};
     var platform2 = {'x1': 250, 'y1': 300, 'x2': 300, 'y2': 300};
 
     platforms.push(platform1);
