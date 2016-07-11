@@ -4,6 +4,10 @@ var mainState = {
     canvasWidth: 800,
     canvasHeight: 600,
 
+    lunarGravity: 100,
+    thrustUpAmount: 25,
+    maxLandingVelocity: 75,
+
     preload: function() { 
         game.load.image('lander', 'assets/lander.png'); 
     },
@@ -16,44 +20,80 @@ var mainState = {
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
         // Display the lander at the position x=100 and y=245
-        this.lander = game.add.sprite(100, 245, 'lander');
+        this.lander = game.add.sprite(100, 400, 'lander');
 
         // Add physics to the lander
         // Needed for: movements, gravity, collisions, etc.
         game.physics.arcade.enable(this.lander);
 
         // Add gravity to the lander to make it fall
-        // this.lander.body.gravity.y = 1000;
-        this.lander.body.gravity.y = 0;
+        this.lander.body.gravity.y = this.lunarGravity;
 
-        // Call the 'jump' function when the spacekey is hit
+        // Call the 'thrustUp' function when the spacekey is hit
         var spaceKey = game.input.keyboard.addKey(
                         Phaser.Keyboard.SPACEBAR);
-        spaceKey.onDown.add(this.jump, this);
+        spaceKey.onDown.add(this.thrustUp, this);
 
         this.score = 0;
         this.labelScore = game.add.text(20, 20, "0", 
             { font: "30px Arial", fill: "#ffffff" });
 
-        var platforms = getPlatformCoordinates(this.canvasWidth, this.canvasHeight, 20, 100, 2);
+        this.platforms = new Array();
+        var platformCoordinates = getPlatformCoordinates(this.canvasWidth, this.canvasHeight, 20, 100, 2);
+        for (var i = 0; i < platformCoordinates.length; i++)
+        {
+            var platformStructure = {};
+            platformStructure.landed = false;
+            platformStructure.coordinates = platformCoordinates[i];
+            this.platforms.push(platformStructure);
+        }
 
         var lineHeight = 2;
 
-        drawLine(game, platforms[0].x1, platforms[0].y1, platforms[0].x2, platforms[0].y2, lineHeight);
-        drawLine(game, platforms[1].x1, platforms[1].y1, platforms[1].x2, platforms[1].y2, lineHeight);
+        drawLine(game, this.platforms[0].coordinates.x1, this.platforms[0].coordinates.y1, this.platforms[0].coordinates.x2, this.platforms[0].coordinates.y2, lineHeight);
+        drawLine(game, this.platforms[1].coordinates.x1, this.platforms[1].coordinates.y1, this.platforms[1].coordinates.x2, this.platforms[1].coordinates.y2, lineHeight);
     },
 
     update: function() {
-        // If the lander is out of the screen (too high or too low)
-        // Call the 'restartGame' function
-        if (this.lander.y < 0 || this.lander.y > 490)
-            this.restartGame();
+        // console.log((this.lander.y + this.lander.height) + " >= " + this.platforms[0].coordinates.y1 + "?");
+
+        if (detectCollision(this.lander, this.platforms) == true)
+        {
+            if (detectSuccessfulLanding(this.lander, this.platforms, this.maxLandingVelocity) == true)
+            {
+                // console.log("Successful landing");
+
+                if (this.platforms[0].landed == false)
+                {
+                    this.increaseScore(1);
+                }
+
+                this.platforms[0].landed = true;
+            }
+            else
+            {
+                console.log("Failed landing");
+
+                this.restartGame();
+            }
+
+            this.lander.body.velocity.y = 0;
+            this.lander.y = this.platforms[0].coordinates.y1 - this.lander.height;
+        }
     },
 
-    // Make the lander jump 
-    jump: function() {
+    // Increase the score
+    increaseScore: function(increaseAmount) {
+        this.score += increaseAmount;
+        this.labelScore.text = this.score;  
+    },
+
+    // Make the lander thrustUp 
+    thrustUp: function() {
+        // console.log("thrustUp()");
+
         // Add a vertical velocity to the lander
-        this.lander.body.velocity.y = -350;
+        this.lander.body.velocity.y = this.thrustUpAmount * -1;
     },
 
     // Restart the game
