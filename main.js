@@ -19,7 +19,8 @@ var mainState = {
         game.physics.arcade.enable(this.bird);
 
         // Add gravity to the bird to make it fall
-        this.bird.body.gravity.y = 1000;
+        // this.bird.body.gravity.y = 1000;
+        this.bird.body.gravity.y = 0;
 
         // Call the 'jump' function when the spacekey is hit
         var spaceKey = game.input.keyboard.addKey(
@@ -31,7 +32,11 @@ var mainState = {
             { font: "30px Arial", fill: "#ffffff" });
 
         var platforms = getPlatformCoordinates(this.canvasWidth, this.canvasHeight, 20, 100, 2);
-        console.log(platforms.length);
+
+        var lineHeight = 2;
+
+        drawLine(game, platforms[0].x1, platforms[0].y1, platforms[0].x2, platforms[0].y2, lineHeight);
+        drawLine(game, platforms[1].x1, platforms[1].y1, platforms[1].x2, platforms[1].y2, lineHeight);
     },
 
     update: function() {
@@ -54,8 +59,8 @@ var mainState = {
     },
 };
 
-var canvasWidth = 400;
-var canvasHeight = 400;
+var canvasWidth = 800;
+var canvasHeight = 600;
 
 // Initialize Phaser and create a game
 var game = new Phaser.Game(canvasWidth, canvasHeight);
