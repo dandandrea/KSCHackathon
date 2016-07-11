@@ -1,5 +1,9 @@
 // Create our 'main' state that will contain the game
 var mainState = {
+    
+    canvasWidth: 800,
+    canvasHeight: 600,
+
     preload: function() { 
         game.load.image('bird', 'assets/bird.png'); 
     },
@@ -59,11 +63,8 @@ var mainState = {
     },
 };
 
-var canvasWidth = 800;
-var canvasHeight = 600;
-
 // Initialize Phaser and create a game
-var game = new Phaser.Game(canvasWidth, canvasHeight);
+var game = new Phaser.Game(mainState.canvasWidth, mainState.canvasHeight);
 
 // Add the 'mainState' and call it 'main'
 game.state.add('main', mainState); 
