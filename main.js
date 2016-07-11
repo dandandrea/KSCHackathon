@@ -1,7 +1,7 @@
 // Create our 'main' state that will contain the game
 var mainState = {
     preload: function() { 
-        game.load.image('bird', 'assets/bird.png'); 
+        game.load.image('lander', 'assets/lander.png'); 
     },
 
     create: function() { 
@@ -11,16 +11,16 @@ var mainState = {
         // Set the physics system
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
-        // Display the bird at the position x=100 and y=245
-        this.bird = game.add.sprite(100, 245, 'bird');
+        // Display the lander at the position x=100 and y=245
+        this.lander = game.add.sprite(100, 245, 'lander');
 
-        // Add physics to the bird
+        // Add physics to the lander
         // Needed for: movements, gravity, collisions, etc.
-        game.physics.arcade.enable(this.bird);
+        game.physics.arcade.enable(this.lander);
 
-        // Add gravity to the bird to make it fall
-        // this.bird.body.gravity.y = 1000;
-        this.bird.body.gravity.y = 0;
+        // Add gravity to the lander to make it fall
+        // this.lander.body.gravity.y = 1000;
+        this.lander.body.gravity.y = 0;
 
         // Call the 'jump' function when the spacekey is hit
         var spaceKey = game.input.keyboard.addKey(
@@ -40,16 +40,16 @@ var mainState = {
     },
 
     update: function() {
-        // If the bird is out of the screen (too high or too low)
+        // If the lander is out of the screen (too high or too low)
         // Call the 'restartGame' function
-        if (this.bird.y < 0 || this.bird.y > 490)
+        if (this.lander.y < 0 || this.lander.y > 490)
             this.restartGame();
     },
 
-    // Make the bird jump 
+    // Make the lander jump 
     jump: function() {
-        // Add a vertical velocity to the bird
-        this.bird.body.velocity.y = -350;
+        // Add a vertical velocity to the lander
+        this.lander.body.velocity.y = -350;
     },
 
     // Restart the game
