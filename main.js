@@ -6,7 +6,7 @@ var mainState = {
 
     create: function() { 
         // Change the background color of the game to blue
-        game.stage.backgroundColor = '#71c5cf';
+        game.stage.backgroundColor = '#000000';
 
         // Set the physics system
         game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -28,7 +28,10 @@ var mainState = {
 
         this.score = 0;
         this.labelScore = game.add.text(20, 20, "0", 
-            { font: "30px Arial", fill: "#ffffff" });  
+            { font: "30px Arial", fill: "#ffffff" });
+
+        var platforms = getPlatformCoordinates(this.canvasWidth, this.canvasHeight, 20, 100, 2);
+        console.log(platforms.length);
     },
 
     update: function() {
@@ -51,8 +54,11 @@ var mainState = {
     },
 };
 
-// Initialize Phaser, and create a 400px by 490px game
-var game = new Phaser.Game(400, 490);
+var canvasWidth = 400;
+var canvasHeight = 400;
+
+// Initialize Phaser and create a game
+var game = new Phaser.Game(canvasWidth, canvasHeight);
 
 // Add the 'mainState' and call it 'main'
 game.state.add('main', mainState); 
