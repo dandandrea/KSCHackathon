@@ -5,7 +5,7 @@ var mainState = {
     canvasHeight: 600,
 
     lunarGravity: 100,
-    thrustUpAmount: 25,
+    thrustUpAmount: 10,
     maxLandingVelocity: 75,
 
     preload: function() { 
@@ -30,9 +30,7 @@ var mainState = {
         this.lander.body.gravity.y = this.lunarGravity;
 
         // Call the 'thrustUp' function when the spacekey is hit
-        var spaceKey = game.input.keyboard.addKey(
-                        Phaser.Keyboard.SPACEBAR);
-        spaceKey.onDown.add(this.thrustUp, this);
+        this.cursors = game.input.keyboard.createCursorKeys();
 
         this.score = 0;
         this.labelScore = game.add.text(20, 20, "0", 
@@ -80,6 +78,11 @@ var mainState = {
             this.lander.body.velocity.y = 0;
             this.lander.y = this.platforms[0].coordinates.y1 - this.lander.height;
         }
+
+        if (this.cursors.up.isDown == true)
+        {
+            this.thrustUp();
+        }
     },
 
     // Increase the score
@@ -93,7 +96,7 @@ var mainState = {
         // console.log("thrustUp()");
 
         // Add a vertical velocity to the lander
-        this.lander.body.velocity.y = this.thrustUpAmount * -1;
+        this.lander.body.velocity.y += this.thrustUpAmount * -1;
     },
 
     // Restart the game
