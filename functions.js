@@ -6,11 +6,39 @@ function getPlatformCoordinates(canvasWidth, canvasHeight, platformWidth, maxYCo
 
     var platforms = new Array();
 
+    // manually add a platofrm in a known location (directly under the sprite)
     var platform1 = {'x1': 50, 'y1': 500, 'x2': 200, 'y2': 500};
-    var platform2 = {'x1': 250, 'y1': 300, 'x2': 300, 'y2': 300};
-
     platforms.push(platform1);
-    platforms.push(platform2);
+    
+    var width = 100;
+    var paddingY = 250;
+    
+    while (platforms.length < numberOfPlatforms)
+    {
+        var x1 = Math.floor(Math.random() * (canvasWidth - width));
+        var y1 = Math.floor((Math.random() * (canvasHeight - paddingY)) + paddingY);
+        
+        var x2 = x1 + width;
+        
+        var overlap = false;
+        
+        // check to ensure that this platform is not above or below any existing platform
+        for (p = 0; p < platforms.length; p++)
+        {
+            if ((platforms[p].x1 < x1 && x1 < platforms[p].x2) 
+                || (platforms[p].x1 < x2 && x2 < platforms[p].x2))
+            {
+                overlap = true;
+                break;
+            }
+        }
+        
+        if (overlap)
+            continue;
+        
+        var platform = {'x1': x1, 'y1': y1, 'x2': x2, 'y2': y1};
+        platforms.push(platform);
+    }
 
     return platforms;
 }
