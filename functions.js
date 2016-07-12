@@ -1,15 +1,11 @@
 function getPlatformCoordinates(canvasWidth, canvasHeight, platformWidth, maxYCoordinateValue, numberOfPlatforms)
 {
-    // TODO: Randomize platform positions while taking maxYCoordinateValue into account
-    // TODO: Also make sure that no platforms are "above" each other -- each should occupy it's own "column"
-    // TODO: Take numberOfPlatforms argument into account?
+    // Randomize platform positions while taking maxYCoordinateValue into account
+    // Also make sure that no platforms are "above" each other -- each should occupy its own "column"
+    // Take numberOfPlatforms argument into account?
 
     var platforms = new Array();
 
-    // manually add a platofrm in a known location (directly under the sprite)
-    var platform1 = {'x1': 50, 'y1': 500, 'x2': 200, 'y2': 500};
-    platforms.push(platform1);
-    
     var width = 100;
     var paddingY = 250;
     
@@ -43,34 +39,77 @@ function getPlatformCoordinates(canvasWidth, canvasHeight, platformWidth, maxYCo
     return platforms;
 }
 
-function drawLine(game, x1, y1, x2, y2, lineHeight)
+function drawLine(game, x1, y1, x2, y2, lineHeight, color)
 {
-    // console.log("Drawing line from (" + x1 + ", " + y1 + ") to (" + x2 + ", " + y2 + ")");
-
     var line = game.add.graphics(0, 0);
-    line.lineStyle(lineHeight, 0xffffff, 1);
+    line.lineStyle(lineHeight, color, 1);
     line.moveTo(x1, y1);
     line.lineTo(x2, y2);
 }
 
 function detectSuccessfulLanding(lander, platforms, maxVelocity)
 {
-    // console.log(lander.body.velocity.y + " <= " + maxVelocity);
+    var landerX1 = Math.round(lander.x);
+    var landerY1 = Math.round(lander.y);
+    var landerX2 = Math.round(lander.x + lander.width);
+    var landerY2 = Math.round(lander.y + lander.height);
 
-    if (lander.body.velocity.y <= maxVelocity)
+    var platformX1 = Math.round(platforms[0].coordinates.x1);
+    var platformY1 = Math.round(platforms[0].coordinates.y1);
+    var platformX2 = Math.round(platforms[0].coordinates.x2);
+    var platformY2 = Math.round(platforms[0].coordinates.y2);
+
+    var landerUL = "(" + landerX1 + ", " + landerY1 + ")";
+    var landerLR = "(" + landerX2 + ", " + landerY2 + ")";
+    var platformUL = "(" + platformX1 + ", " + platformY1 + ")";
+    var platformLR = "(" + platformX2 + ", " + platformY2 + ")";
+
+    if (lander.body.velocity.y <= maxVelocity && landerY2 == platformY1 && landerX1 >= platformX1 && landerX2 <= platformX2)
     {
+        console.log("Successful landing");
         return true;
     }
 
+    console.log("Failed landing: [Velocity: " + Math.round(lander.body.velocity.y) + " (max: " + maxVelocity + ")] [Lander: " + landerUL + ", " + landerLR + "] vs [Platform: " + platformUL + ", " + platformLR + "]");
     return false;
 }
 
 function detectCollision(lander, platforms)
 {
-    // console.log("detectCollision: " + (lander.y + lander.height) + " >= " + platforms[0].coordinates.y1);
+    var landerX1 = Math.round(lander.x);
+    var landerY1 = Math.round(lander.y);
+    var landerX2 = Math.round(lander.x + lander.width);
+    var landerY2 = Math.round(lander.y + lander.height);
 
-    if (lander.y + lander.height >= platforms[0].coordinates.y1)
+    var platformX1 = Math.round(platforms[0].coordinates.x1);
+    var platformY1 = Math.round(platforms[0].coordinates.y1);
+    var platformX2 = Math.round(platforms[0].coordinates.x2);
+    var platformY2 = Math.round(platforms[0].coordinates.y2);
+
+    var landerUL = "(" + landerX1 + ", " + landerY1 + ")";
+    var landerLR = "(" + landerX2 + ", " + landerY2 + ")";
+    var platformUL = "(" + platformX1 + ", " + platformY1 + ")";
+    var platformLR = "(" + platformX2 + ", " + platformY2 + ")";
+
+    console.log("detectCollision: [Lander: " + landerUL + ", " + landerLR + "] vs [Platform: " + platformUL + ", " + platformLR + "]");
+
+    var collision = false;
+
+    // 1. Check rectangle top
+    if (landerY1 == platformY1 && landerX1 <= platformX2 && landerX2 >= platformX1) collision = true;
+
+    // 2. Check rectangle bottom
+    if (landerY2 == platformY1 && landerX1 <= platformX2 && landerX2 >= platformX1) collision = true;
+
+    // 3. Check rectangle left
+    if (landerX1 == platformX2 && landerY1 <= platformY2 && landerY2 >= platformY1) collision = true;
+
+    // 4. Check rectangle right
+    if (landerX2 == platformX1 && landerY1 <= platformY2 && landerY2 >= platformY1) collision = true;
+
+    if (collision == true)
     {
+        console.log("Collision");
         return true;
     }
 

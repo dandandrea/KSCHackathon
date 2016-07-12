@@ -1,13 +1,15 @@
 // Create our 'main' state that will contain the game
 var mainState = {
-    
     canvasWidth: 800,
     canvasHeight: 600,
+
+    landerStartX: 350,
+    landerStartY: 100,
 
     lunarGravity: 100,
     thrustUpAmount: 10,
     thrustSidewaysAmount: 5,
-    maxLandingVelocity: 75,
+    maxLandingVelocity: 100,
 
     preload: function() { 
         game.load.image('lander', 'assets/lander.png'); 
@@ -20,8 +22,8 @@ var mainState = {
         // Set the physics system
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
-        // Display the lander at the position x=100 and y=245
-        this.lander = game.add.sprite(100, 400, 'lander');
+        // Display the lander at a given position
+        this.lander = game.add.sprite(this.landerStartX, this.landerStartY, 'lander');
 
         // Add physics to the lander
         // Needed for: movements, gravity, collisions, etc.
@@ -37,25 +39,10 @@ var mainState = {
         this.labelScore = game.add.text(20, 20, "0", 
             { font: "30px Arial", fill: "#ffffff" });
 
-        this.platforms = new Array();
-        var platformCoordinates = getPlatformCoordinates(this.canvasWidth, this.canvasHeight, 20, 100, 2);
-        for (var i = 0; i < platformCoordinates.length; i++)
-        {
-            var platformStructure = {};
-            platformStructure.landed = false;
-            platformStructure.coordinates = platformCoordinates[i];
-            this.platforms.push(platformStructure);
-        }
-
-        var lineHeight = 2;
-
-        drawLine(game, this.platforms[0].coordinates.x1, this.platforms[0].coordinates.y1, this.platforms[0].coordinates.x2, this.platforms[0].coordinates.y2, lineHeight);
-        drawLine(game, this.platforms[1].coordinates.x1, this.platforms[1].coordinates.y1, this.platforms[1].coordinates.x2, this.platforms[1].coordinates.y2, lineHeight);
+        this.resetPlatform();
     },
 
     update: function() {
-        // console.log((this.lander.y + this.lander.height) + " >= " + this.platforms[0].coordinates.y1 + "?");
-
         if (detectCollision(this.lander, this.platforms) == true)
         {
             if (detectSuccessfulLanding(this.lander, this.platforms, this.maxLandingVelocity) == true)
@@ -71,13 +58,11 @@ var mainState = {
             }
             else
             {
-                console.log("Failed landing");
-
                 this.restartGame();
             }
 
             this.lander.body.velocity.y = 0;
-            this.lander.y = this.platforms[0].coordinates.y1 - this.lander.height;
+            this.lander.y = this.platforms[0].coordinates.y1 - this.lander.height - 1;
         }
 
         this.move();
@@ -101,6 +86,27 @@ var mainState = {
         }
     },
 
+    resetPlatform: function() {
+        var lineHeight = 2;
+
+        if (this.platforms != null)
+        {
+            drawLine(game, this.platforms[0].coordinates.x1, this.platforms[0].coordinates.y1, this.platforms[0].coordinates.x2, this.platforms[0].coordinates.y2, lineHeight, 0x000000);
+        }
+
+        this.platforms = new Array();
+        var platformCoordinates = getPlatformCoordinates(this.canvasWidth, this.canvasHeight, 20, 100, 1);
+        for (var i = 0; i < platformCoordinates.length; i++)
+        {
+            var platformStructure = {};
+            platformStructure.landed = false;
+            platformStructure.coordinates = platformCoordinates[i];
+            this.platforms.push(platformStructure);
+        }
+
+        drawLine(game, this.platforms[0].coordinates.x1, this.platforms[0].coordinates.y1, this.platforms[0].coordinates.x2, this.platforms[0].coordinates.y2, lineHeight, 0xffffff);
+    },
+
     // Increase the score
     increaseScore: function(increaseAmount) {
         this.score += increaseAmount;
@@ -109,6 +115,11 @@ var mainState = {
 
     // Make the lander thrust up
     thrustUp: function() {
+        if (this.platforms[0].landed == true)
+        {
+            this.resetPlatform();
+        }
+
         // Add a vertical velocity to the lander
         this.lander.body.velocity.y += this.thrustUpAmount * -1;
     },
