@@ -38,10 +38,13 @@ var mainState = {
         this.cursors = game.input.keyboard.createCursorKeys();
 
         this.score = 0;
-        this.labelScore = game.add.text(20, 20, "Score: 0", 
+        this.labelScore = game.add.text(20, 20, "Invoices delivered: 0", 
             { font: "30px Arial", fill: "#ffffff" });
 
         this.labelGameOver = game.add.text(175, 275, "",
+            { font: "30px Arial", fill: "#ff0000" });
+
+        this.labelInvoiceDelivered = game.add.text(250, 275, "",
             { font: "30px Arial", fill: "#ff0000" });
 
         this.resetPlatform();
@@ -62,6 +65,9 @@ var mainState = {
             if (detectSuccessfulLanding(this.lander, this.platforms, this.maxLandingVelocity) == true)
             {
                 // console.log("Successful landing");
+
+                this.labelInvoiceDelivered.text = "Invoice delivered!";
+                this.game.time.events.add(Phaser.Timer.SECOND * 2, this.clearStatus, this);
 
                 if (this.platforms[0].landed == false)
                 {
@@ -85,6 +91,11 @@ var mainState = {
         }
 
         this.move();
+    },
+
+    clearStatus: function()
+    {
+        this.labelInvoiceDelivered.text = "";
     },
 
     move: function()
@@ -129,7 +140,7 @@ var mainState = {
     // Increase the score
     increaseScore: function(increaseAmount) {
         this.score += increaseAmount;
-        this.labelScore.text = "Score: " + this.score;  
+        this.labelScore.text = "Invoices delivered: " + this.score;  
     },
 
     // Make the lander thrust up
