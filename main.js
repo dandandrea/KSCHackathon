@@ -11,6 +11,9 @@ var mainState = {
     thrustSidewaysAmount: 5,
     maxLandingVelocity: 100,
 
+    score: 0,
+    gas: 10000,
+
     preload: function() { 
         game.load.image('lander', 'assets/lander.png'); 
     },
@@ -37,8 +40,10 @@ var mainState = {
         // Call the 'thrustUp' function when the spacekey is hit
         this.cursors = game.input.keyboard.createCursorKeys();
 
-        this.score = 0;
-        this.labelScore = game.add.text(20, 20, "Invoices delivered: 0", 
+        this.labelScore = game.add.text(20, 20, "Invoices delivered: " + this.score, 
+            { font: "30px Arial", fill: "#ffffff" });
+
+        this.labelGas = game.add.text(20, 50, "Natural gas left: " + this.gasRemaining(), 
             { font: "30px Arial", fill: "#ffffff" });
 
         this.labelGameOver = game.add.text(175, 275, "",
@@ -90,12 +95,19 @@ var mainState = {
             this.lander.y = this.platforms[0].coordinates.y1 - this.lander.height - 1;
         }
 
+        this.labelGas.text = "Natural gas left: " + this.gasRemaining();
+
         this.move();
     },
 
     clearStatus: function()
     {
         this.labelInvoiceDelivered.text = "";
+    },
+
+    gasRemaining: function()
+    {
+        return Math.round(this.gas / 100);
     },
 
     move: function()
@@ -152,18 +164,24 @@ var mainState = {
 
         // Add a vertical velocity to the lander
         this.lander.body.velocity.y += this.thrustUpAmount * -1;
+
+        this.gas = this.gas - this.thrustUpAmount;
     },
 
     // Make the lander thrust left
     thrustLeft: function() {
         // Add a vertical velocity to the lander
         this.lander.body.velocity.x += this.thrustSidewaysAmount * -1;
+
+        this.gas = this.gas - this.thrustSidewaysAmount;
     },
 
     // Make the lander thrust right
     thrustRight: function() {
         // Add a vertical velocity to the lander
         this.lander.body.velocity.x += this.thrustSidewaysAmount;
+
+        this.gas = this.gas - this.thrustSidewaysAmount;
     },
 
     // Restart the game
