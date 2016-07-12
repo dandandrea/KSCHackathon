@@ -66,11 +66,11 @@ function detectSuccessfulLanding(lander, platforms, maxVelocity)
 
     if (lander.body.velocity.y <= maxVelocity && landerY2 == platformY1 && landerX1 >= platformX1 && landerX2 <= platformX2)
     {
-        console.log("Successful landing");
+        // console.log("Successful landing");
         return true;
     }
 
-    console.log("Failed landing: [Velocity: " + Math.round(lander.body.velocity.y) + " (max: " + maxVelocity + ")] [Lander: " + landerUL + ", " + landerLR + "] vs [Platform: " + platformUL + ", " + platformLR + "]");
+    // console.log("Failed landing: [Velocity: " + Math.round(lander.body.velocity.y) + " (max: " + maxVelocity + ")] [Lander: " + landerUL + ", " + landerLR + "] vs [Platform: " + platformUL + ", " + platformLR + "]");
     return false;
 }
 
@@ -109,7 +109,7 @@ function detectCollision(lander, platforms)
 
     if (collision == true)
     {
-        console.log("Collision");
+        // console.log("Collision");
         return true;
     }
 

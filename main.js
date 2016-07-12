@@ -11,9 +11,6 @@ var mainState = {
     thrustSidewaysAmount: 5,
     maxLandingVelocity: 100,
 
-    score: 0,
-    gas: 10000,
-
     preload: function() { 
         game.load.image('lander', 'assets/lander.png'); 
     },
@@ -40,9 +37,11 @@ var mainState = {
         // Call the 'thrustUp' function when the spacekey is hit
         this.cursors = game.input.keyboard.createCursorKeys();
 
+        this.score = 0;
         this.labelScore = game.add.text(20, 20, "Invoices delivered: " + this.score, 
             { font: "30px Arial", fill: "#ffffff" });
 
+        this.gas = 10000;
         this.labelGas = game.add.text(20, 50, "Natural gas left: " + this.gasRemaining(), 
             { font: "30px Arial", fill: "#ffffff" });
 
@@ -58,11 +57,8 @@ var mainState = {
     update: function() {
         if (detectOutOfBounds(this.lander, this.canvasWidth, this.canvasHeight) == true)
         {
-            this.labelGameOver.text = "Gainesville, we have a problem."
-            this.lander.body.velocity.y = 0;
-            this.lander.body.velocity.x = 0;
-            this.game.input.keyboard.onDownCallback = function(e) { console.log("hey"); this.game.paused = false; this.game.state.start('main'); };
-            this.game.paused = true;
+            this.gameOver();
+            return;
         }
 
         if (detectCollision(this.lander, this.platforms) == true)
@@ -83,11 +79,7 @@ var mainState = {
             }
             else
             {
-                this.labelGameOver.text = "Gainesville, we have a problem."
-                this.lander.body.velocity.y = 0;
-                this.lander.body.velocity.x = 0;
-                this.game.input.keyboard.onDownCallback = function(e) { console.log("hey"); this.game.paused = false; this.game.state.start('main'); };
-                this.game.paused = true;
+                this.gameOver();
                 return;
             }
 
@@ -95,9 +87,24 @@ var mainState = {
             this.lander.y = this.platforms[0].coordinates.y1 - this.lander.height - 1;
         }
 
+        if (this.gas <= 0)
+        {
+            this.gameOver();
+            return;
+        }
+
         this.labelGas.text = "Natural gas left: " + this.gasRemaining();
 
         this.move();
+    },
+
+    gameOver: function()
+    {
+        this.labelGameOver.text = "Gainesville, we have a problem."
+        this.lander.body.velocity.y = 0;
+        this.lander.body.velocity.x = 0;
+        this.game.input.keyboard.onDownCallback = function(e) { this.game.paused = false; this.game.state.start('main'); };
+        this.game.paused = true;
     },
 
     clearStatus: function()
