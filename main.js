@@ -77,6 +77,7 @@ var mainState = {
                 this.lander.body.velocity.x = 0;
                 this.game.input.keyboard.onDownCallback = function(e) { console.log("hey"); this.game.paused = false; this.game.state.start('main'); };
                 this.game.paused = true;
+                return;
             }
 
             this.lander.body.velocity.y = 0;
