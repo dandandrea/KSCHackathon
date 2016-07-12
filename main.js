@@ -16,6 +16,8 @@ var mainState = {
     },
 
     create: function() { 
+        game.input.keyboard.onDownCallback = function(e) {};
+
         // Change the background color of the game to blue
         game.stage.backgroundColor = '#000000';
 
@@ -36,13 +38,25 @@ var mainState = {
         this.cursors = game.input.keyboard.createCursorKeys();
 
         this.score = 0;
-        this.labelScore = game.add.text(20, 20, "0", 
+        this.labelScore = game.add.text(20, 20, "Score: 0", 
             { font: "30px Arial", fill: "#ffffff" });
+
+        this.labelGameOver = game.add.text(175, 275, "",
+            { font: "30px Arial", fill: "#ff0000" });
 
         this.resetPlatform();
     },
 
     update: function() {
+        if (detectOutOfBounds(this.lander, this.canvasWidth, this.canvasHeight) == true)
+        {
+            this.labelGameOver.text = "Gainesville, we have a problem."
+            this.lander.body.velocity.y = 0;
+            this.lander.body.velocity.x = 0;
+            this.game.input.keyboard.onDownCallback = function(e) { console.log("hey"); this.game.paused = false; this.game.state.start('main'); };
+            this.game.paused = true;
+        }
+
         if (detectCollision(this.lander, this.platforms) == true)
         {
             if (detectSuccessfulLanding(this.lander, this.platforms, this.maxLandingVelocity) == true)
@@ -58,7 +72,11 @@ var mainState = {
             }
             else
             {
-                this.restartGame();
+                this.labelGameOver.text = "Gainesville, we have a problem."
+                this.lander.body.velocity.y = 0;
+                this.lander.body.velocity.x = 0;
+                this.game.input.keyboard.onDownCallback = function(e) { console.log("hey"); this.game.paused = false; this.game.state.start('main'); };
+                this.game.paused = true;
             }
 
             this.lander.body.velocity.y = 0;
@@ -110,7 +128,7 @@ var mainState = {
     // Increase the score
     increaseScore: function(increaseAmount) {
         this.score += increaseAmount;
-        this.labelScore.text = this.score;  
+        this.labelScore.text = "Score: " + this.score;  
     },
 
     // Make the lander thrust up

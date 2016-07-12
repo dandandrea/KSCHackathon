@@ -91,7 +91,7 @@ function detectCollision(lander, platforms)
     var platformUL = "(" + platformX1 + ", " + platformY1 + ")";
     var platformLR = "(" + platformX2 + ", " + platformY2 + ")";
 
-    console.log("detectCollision: [Lander: " + landerUL + ", " + landerLR + "] vs [Platform: " + platformUL + ", " + platformLR + "]");
+    // console.log("detectCollision: [Lander: " + landerUL + ", " + landerLR + "] vs [Platform: " + platformUL + ", " + platformLR + "]");
 
     var collision = false;
 
@@ -110,6 +110,16 @@ function detectCollision(lander, platforms)
     if (collision == true)
     {
         console.log("Collision");
+        return true;
+    }
+
+    return false;
+}
+
+function detectOutOfBounds(lander, canvasWidth, canvasHeight)
+{
+    if (lander.x < 0 || lander.x + lander.width > canvasWidth || lander.y < 0 || lander.y + lander.height > canvasHeight)
+    {
         return true;
     }
 
