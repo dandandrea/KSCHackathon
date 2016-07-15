@@ -1,6 +1,6 @@
 # Hackathon lunar lander
 
-Lunar lander-type game made during a 8 hour hackathon at work. "Natural gas remaining", "Invoices delivered", and "Gainesville, we have a problem" are inside jokes from our company.
+Lunar lander-type game made during an 8-hour hackathon at work. "Natural gas remaining", "Invoices delivered", and "Gainesville, we have a problem" are inside jokes from our company.
 
 ## How to play
 
