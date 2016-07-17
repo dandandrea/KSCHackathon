@@ -74,21 +74,21 @@ var mainState = {
             return;
         }
 
-        if (detectCollision(this.lander, this.platforms) == true)
+        if (detectCollision(this.lander, this.platform) == true)
         {
-            if (detectSuccessfulLanding(this.lander, this.platforms, this.maxLandingVelocity) == true)
+            if (detectSuccessfulLanding(this.lander, this.platform, this.maxLandingVelocity) == true)
             {
                 // console.log("Successful landing");
 
                 this.labelInvoiceDelivered.text = "Invoice delivered!";
                 this.game.time.events.add(Phaser.Timer.SECOND * 2, this.clearStatus, this);
 
-                if (this.platforms[0].landed == false)
+                if (this.platform.landed == false)
                 {
                     this.increaseScore(1);
                 }
 
-                this.platforms[0].landed = true;
+                this.platform.landed = true;
             }
             else
             {
@@ -97,7 +97,7 @@ var mainState = {
             }
 
             this.lander.body.velocity.y = 0;
-            this.lander.y = this.platforms[0].coordinates.y1 - this.lander.height - 1;
+            this.lander.y = this.platform.coordinates.y1 - this.lander.height - 1;
         }
 
         if (this.gas <= 0)
@@ -170,22 +170,18 @@ var mainState = {
     resetPlatform: function() {
         var lineHeight = 2;
 
-        if (this.platforms != null)
+        if (this.platform != null)
         {
-            drawLine(game, this.platforms[0].coordinates.x1, this.platforms[0].coordinates.y1, this.platforms[0].coordinates.x2, this.platforms[0].coordinates.y2, lineHeight, 0x000000);
+            drawLine(game, this.platform.coordinates.x1, this.platform.coordinates.y1, this.platform.coordinates.x2, this.platform.coordinates.y2, lineHeight, 0x000000);
         }
 
-        this.platforms = new Array();
         var platformCoordinates = getPlatformCoordinates(this.canvasWidth, this.canvasHeight, 20, 100, 1);
-        for (var i = 0; i < platformCoordinates.length; i++)
-        {
-            var platformStructure = {};
-            platformStructure.landed = false;
-            platformStructure.coordinates = platformCoordinates[i];
-            this.platforms.push(platformStructure);
-        }
+        var platformStructure = {};
+        platformStructure.landed = false;
+        platformStructure.coordinates = platformCoordinates[0];
+        this.platform = platformStructure;
 
-        drawLine(game, this.platforms[0].coordinates.x1, this.platforms[0].coordinates.y1, this.platforms[0].coordinates.x2, this.platforms[0].coordinates.y2, lineHeight, 0xffffff);
+        drawLine(game, this.platform.coordinates.x1, this.platform.coordinates.y1, this.platform.coordinates.x2, this.platform.coordinates.y2, lineHeight, 0xffffff);
     },
 
     // Increase the score
@@ -196,7 +192,7 @@ var mainState = {
 
     // Make the lander thrust up
     thrustUp: function() {
-        if (this.platforms[0].landed == true)
+        if (this.platform.landed == true)
         {
             this.initializeLander();
             this.resetPlatform();

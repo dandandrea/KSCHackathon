@@ -47,17 +47,17 @@ function drawLine(game, x1, y1, x2, y2, lineHeight, color)
     line.lineTo(x2, y2);
 }
 
-function detectSuccessfulLanding(lander, platforms, maxVelocity)
+function detectSuccessfulLanding(lander, platform, maxVelocity)
 {
     var landerX1 = Math.round(lander.x);
     var landerY1 = Math.round(lander.y);
     var landerX2 = Math.round(lander.x + lander.width);
     var landerY2 = Math.round(lander.y + lander.height);
 
-    var platformX1 = Math.round(platforms[0].coordinates.x1);
-    var platformY1 = Math.round(platforms[0].coordinates.y1);
-    var platformX2 = Math.round(platforms[0].coordinates.x2);
-    var platformY2 = Math.round(platforms[0].coordinates.y2);
+    var platformX1 = Math.round(platform.coordinates.x1);
+    var platformY1 = Math.round(platform.coordinates.y1);
+    var platformX2 = Math.round(platform.coordinates.x2);
+    var platformY2 = Math.round(platform.coordinates.y2);
 
     var landerUL = "(" + landerX1 + ", " + landerY1 + ")";
     var landerLR = "(" + landerX2 + ", " + landerY2 + ")";
@@ -74,17 +74,17 @@ function detectSuccessfulLanding(lander, platforms, maxVelocity)
     return false;
 }
 
-function detectCollision(lander, platforms)
+function detectCollision(lander, platform)
 {
     var landerX1 = Math.round(lander.x);
     var landerY1 = Math.round(lander.y);
     var landerX2 = Math.round(lander.x + lander.width);
     var landerY2 = Math.round(lander.y + lander.height);
 
-    var platformX1 = Math.round(platforms[0].coordinates.x1);
-    var platformY1 = Math.round(platforms[0].coordinates.y1);
-    var platformX2 = Math.round(platforms[0].coordinates.x2);
-    var platformY2 = Math.round(platforms[0].coordinates.y2);
+    var platformX1 = Math.round(platform.coordinates.x1);
+    var platformY1 = Math.round(platform.coordinates.y1);
+    var platformX2 = Math.round(platform.coordinates.x2);
+    var platformY2 = Math.round(platform.coordinates.y2);
 
     var landerUL = "(" + landerX1 + ", " + landerY1 + ")";
     var landerLR = "(" + landerX2 + ", " + landerY2 + ")";
