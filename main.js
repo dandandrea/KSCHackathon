@@ -45,6 +45,9 @@ var mainState = {
         this.labelGas = game.add.text(20, 50, "Natural gas left: " + this.gasRemaining(), 
             { font: "30px Arial", fill: "#ffffff" });
 
+        this.labelUnsafeSpeed = game.add.text(0, 0, "", 
+            { font: "bold 30px Arial", fill: "#ff0000", boundsAlignH: "right" });
+
         this.labelGameOver = game.add.text(0, 0, "",
             { font: "bold 30px Arial", fill: "#ff0000", boundsAlignH: "center" });
 
@@ -54,6 +57,7 @@ var mainState = {
         this.labelInvoiceDelivered = game.add.text(0, 0, "",
             { font: "bold 30px Arial", fill: "#ff0000", boundsAlignH: "center" });
 
+        this.labelUnsafeSpeed.setTextBounds(0, 20, this.canvasWidth, 70);
         this.labelGameOver.setTextBounds(0, 275, this.canvasWidth, 325);
         this.labelGameOverReason.setTextBounds(0, 325, this.canvasWidth, 375);
         this.labelInvoiceDelivered.setTextBounds(0, 275, this.canvasWidth, 325);
@@ -62,6 +66,15 @@ var mainState = {
     },
 
     update: function() {
+        if (this.lander.body.velocity.y > this.maxLandingVelocity)
+        {
+            this.setUnsafeLandingSpeed();
+        }
+        else
+        {
+            this.clearUnsafeLandingSpeed();
+        }
+
         if (detectOutOfBounds(this.lander, this.canvasWidth, this.canvasHeight) == true)
         {
             this.gameOver("Left the area");
@@ -205,6 +218,16 @@ var mainState = {
         // Start the 'main' state, which restarts the game
         game.state.start('main');
     },
+
+    // Set unsafe landing speed indicator
+    setUnsafeLandingSpeed: function() {
+        this.labelUnsafeSpeed.text = "UNSAFE LANDING SPEED ";
+    },
+
+    // Set unsafe landing speed indicator
+    clearUnsafeLandingSpeed: function() {
+        this.labelUnsafeSpeed.text = "";
+    }
 };
 
 // Initialize Phaser and create a game
