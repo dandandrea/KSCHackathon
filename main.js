@@ -46,13 +46,13 @@ var mainState = {
             { font: "30px Arial", fill: "#ffffff" });
 
         this.labelGameOver = game.add.text(0, 0, "",
-            { font: "30px Arial", fill: "#ff0000", boundsAlignH: "center" });
+            { font: "bold 30px Arial", fill: "#ff0000", boundsAlignH: "center" });
 
         this.labelGameOverReason = game.add.text(0, 0, "",
-            { font: "30px Arial", fill: "#ff0000", boundsAlignH: "center" });
+            { font: "bold 30px Arial", fill: "#ff0000", boundsAlignH: "center" });
 
         this.labelInvoiceDelivered = game.add.text(0, 0, "",
-            { font: "30px Arial", fill: "#ff0000", boundsAlignH: "center" });
+            { font: "bold 30px Arial", fill: "#ff0000", boundsAlignH: "center" });
 
         this.labelGameOver.setTextBounds(0, 275, this.canvasWidth, 325);
         this.labelGameOverReason.setTextBounds(0, 325, this.canvasWidth, 375);
