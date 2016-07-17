@@ -24,15 +24,8 @@ var mainState = {
         // Set the physics system
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
-        // Display the lander at a given position
-        this.lander = game.add.sprite(this.landerStartX, this.landerStartY, 'lander');
-
-        // Add physics to the lander
-        // Needed for: movements, gravity, collisions, etc.
-        game.physics.arcade.enable(this.lander);
-
-        // Add gravity to the lander to make it fall
-        this.lander.body.gravity.y = this.lunarGravity;
+        // Initialize the lander
+        this.initializeLander();
 
         // Call the 'thrustUp' function when the spacekey is hit
         this.cursors = game.input.keyboard.createCursorKeys();
@@ -118,6 +111,23 @@ var mainState = {
         this.move();
     },
 
+    initializeLander: function() {
+        if (this.lander != null)
+        {
+            this.lander.destroy();
+        }
+
+        // Display the lander at a given position
+        this.lander = game.add.sprite(this.landerStartX, this.landerStartY, 'lander');
+
+        // Add physics to the lander
+        // Needed for: movements, gravity, collisions, etc.
+        game.physics.arcade.enable(this.lander);
+
+        // Add gravity to the lander to make it fall
+        this.lander.body.gravity.y = this.lunarGravity;
+    },
+
     gameOver: function(reason)
     {
         this.labelInvoiceDelivered.text = "";
@@ -188,6 +198,7 @@ var mainState = {
     thrustUp: function() {
         if (this.platforms[0].landed == true)
         {
+            this.initializeLander();
             this.resetPlatform();
         }
 
