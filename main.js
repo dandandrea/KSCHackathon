@@ -45,11 +45,18 @@ var mainState = {
         this.labelGas = game.add.text(20, 50, "Natural gas left: " + this.gasRemaining(), 
             { font: "30px Arial", fill: "#ffffff" });
 
-        this.labelGameOver = game.add.text(175, 275, "",
-            { font: "30px Arial", fill: "#ff0000" });
+        this.labelGameOver = game.add.text(0, 0, "",
+            { font: "30px Arial", fill: "#ff0000", boundsAlignH: "center" });
 
-        this.labelInvoiceDelivered = game.add.text(250, 275, "",
-            { font: "30px Arial", fill: "#ff0000" });
+        this.labelGameOverReason = game.add.text(0, 0, "",
+            { font: "30px Arial", fill: "#ff0000", boundsAlignH: "center" });
+
+        this.labelInvoiceDelivered = game.add.text(0, 0, "",
+            { font: "30px Arial", fill: "#ff0000", boundsAlignH: "center" });
+
+        this.labelGameOver.setTextBounds(0, 275, this.canvasWidth, 325);
+        this.labelGameOverReason.setTextBounds(0, 325, this.canvasWidth, 375);
+        this.labelInvoiceDelivered.setTextBounds(0, 275, this.canvasWidth, 325);
 
         this.resetPlatform();
     },
@@ -57,7 +64,7 @@ var mainState = {
     update: function() {
         if (detectOutOfBounds(this.lander, this.canvasWidth, this.canvasHeight) == true)
         {
-            this.gameOver();
+            this.gameOver("Left the area");
             return;
         }
 
@@ -79,7 +86,7 @@ var mainState = {
             }
             else
             {
-                this.gameOver();
+                this.gameOver("Crashed");
                 return;
             }
 
@@ -89,7 +96,7 @@ var mainState = {
 
         if (this.gas <= 0)
         {
-            this.gameOver();
+            this.gameOver("Out of gas");
             return;
         }
 
@@ -98,9 +105,11 @@ var mainState = {
         this.move();
     },
 
-    gameOver: function()
+    gameOver: function(reason)
     {
-        this.labelGameOver.text = "Gainesville, we have a problem."
+        this.labelInvoiceDelivered.text = "";
+        this.labelGameOver.text = "Gainesville, we have a problem.";
+        this.labelGameOverReason.text = "(" + reason + ")";
         this.lander.body.velocity.y = 0;
         this.lander.body.velocity.x = 0;
         this.game.input.keyboard.onDownCallback = function(e) { this.game.paused = false; this.game.state.start('main'); };
