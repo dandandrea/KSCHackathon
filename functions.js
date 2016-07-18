@@ -74,43 +74,35 @@ function detectSuccessfulLanding(lander, platform, maxVelocity)
     return false;
 }
 
-function detectCollision(lander, platform)
+function detectCollision(lander, terrain)
 {
     var landerX1 = Math.round(lander.x);
     var landerY1 = Math.round(lander.y);
     var landerX2 = Math.round(lander.x + lander.width);
     var landerY2 = Math.round(lander.y + lander.height);
 
-    var platformX1 = Math.round(platform.coordinates.x1);
-    var platformY1 = Math.round(platform.coordinates.y1);
-    var platformX2 = Math.round(platform.coordinates.x2);
-    var platformY2 = Math.round(platform.coordinates.y2);
-
-    var landerUL = "(" + landerX1 + ", " + landerY1 + ")";
-    var landerLR = "(" + landerX2 + ", " + landerY2 + ")";
-    var platformUL = "(" + platformX1 + ", " + platformY1 + ")";
-    var platformLR = "(" + platformX2 + ", " + platformY2 + ")";
-
-    // console.log("detectCollision: [Lander: " + landerUL + ", " + landerLR + "] vs [Platform: " + platformUL + ", " + platformLR + "]");
-
-    var collision = false;
-
-    // 1. Check rectangle top
-    if (lineIntersect(platformX1, platformY1, platformX2, platformY2, landerX1, landerY1, landerX2, landerY1)) collision = true;
-
-    // 2. Check rectangle bottom
-    if (lineIntersect(platformX1, platformY1, platformX2, platformY2, landerX1, landerY2, landerX2, landerY2 - 1)) collision = true;
-
-    // 3. Check rectangle left side
-    if (lineIntersect(platformX1, platformY1, platformX2, platformY2, landerX1, landerY1, landerX1, landerY2)) collision = true;
-
-    // 4. Check rectangle right side
-    if (lineIntersect(platformX1, platformY1, platformX2, platformY2, landerX2, landerY1, landerX2, landerY2)) collision = true;
-
-    if (collision == true)
+    for (i = 0; i < terrain.length; i++)
     {
-        // console.log("Collision");
-        return true;
+        var platformX1 = Math.round(terrain[i].x1);
+        var platformY1 = Math.round(terrain[i].y1);
+        var platformX2 = Math.round(terrain[i].x2);
+        var platformY2 = Math.round(terrain[i].y2);
+
+        // 1. Check rectangle top
+        if (lineIntersect(platformX1, platformY1, platformX2, platformY2, landerX1, landerY1, landerX2, landerY1))
+            return true;
+
+        // 2. Check rectangle bottom
+        if (lineIntersect(platformX1, platformY1, platformX2, platformY2, landerX1, landerY2, landerX2, landerY2 - 1))
+            return true;
+
+        // 3. Check rectangle left side
+        if (lineIntersect(platformX1, platformY1, platformX2, platformY2, landerX1, landerY1, landerX1, landerY2))
+            return true;
+
+        // 4. Check rectangle right side
+        if (lineIntersect(platformX1, platformY1, platformX2, platformY2, landerX2, landerY1, landerX2, landerY2))
+            return true;
     }
 
     return false;

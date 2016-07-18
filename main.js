@@ -11,11 +11,11 @@ var mainState = {
     thrustSidewaysAmount: 5,
     maxLandingVelocity: 100,
 
-    preload: function() { 
+    preload: function() {
         game.load.image('lander', 'assets/lander.png'); 
     },
 
-    create: function() { 
+    create: function() {
         game.input.keyboard.onDownCallback = function(e) {};
 
         // Change the background color of the game to blue
@@ -55,7 +55,7 @@ var mainState = {
         this.labelGameOverReason.setTextBounds(0, 325, this.canvasWidth, 375);
         this.labelInvoiceDelivered.setTextBounds(0, 275, this.canvasWidth, 325);
 
-        this.resetPlatform();
+        this.resetTerrain();
     },
 
     update: function() {
@@ -74,7 +74,7 @@ var mainState = {
             return;
         }
 
-        if (detectCollision(this.lander, this.platform) == true)
+        if (detectCollision(this.lander, this.terrain) == true)
         {
             if (detectSuccessfulLanding(this.lander, this.platform, this.maxLandingVelocity) == true)
             {
@@ -167,21 +167,53 @@ var mainState = {
         }
     },
 
-    resetPlatform: function() {
+    resetTerrain: function() {
         var lineHeight = 2;
 
-        if (this.platform != null)
+        if (this.terrain != null)
         {
-            drawLine(game, this.platform.coordinates.x1, this.platform.coordinates.y1, this.platform.coordinates.x2, this.platform.coordinates.y2, lineHeight, 0x000000);
+            for (i = 0; i < this.terrain.length; i++)
+            {
+                drawLine(game, this.terrain[i].x1, this.terrain[i].y1, this.terrain[i].x2, this.terrain[i].y2, lineHeight, 0x000000);
+            }
         }
+
+        this.terrain = new Array();
 
         var platformCoordinates = getPlatformCoordinates(this.canvasWidth, this.canvasHeight, 20, 100, 1);
         var platformStructure = {};
         platformStructure.landed = false;
         platformStructure.coordinates = platformCoordinates[0];
+        this.terrain.push(platformCoordinates[0]);
         this.platform = platformStructure;
 
-        drawLine(game, this.platform.coordinates.x1, this.platform.coordinates.y1, this.platform.coordinates.x2, this.platform.coordinates.y2, lineHeight, 0xffffff);
+        var x1, y1, x2, y2;
+
+        x1 = 0;
+        y1 = Math.floor(Math.random() * this.canvasHeight) + 0;
+        x2 = this.platform.coordinates.x1;
+        y2 = this.platform.coordinates.y1;
+
+        this.terrain.push({"x1": x1, "y1": y1, "x2": x2, "y2": y2});
+
+        x1 = this.platform.coordinates.x2;
+        y1 = this.platform.coordinates.y2;
+        x2 = this.canvasWidth;
+        y2 = Math.floor(Math.random() * this.canvasHeight) + 0;
+
+        this.terrain.push({"x1": x1, "y1": y1, "x2": x2, "y2": y2});
+
+        for (i = 0; i < this.terrain.length; i++)
+        {
+            var lineColor =  0xffffff;
+
+            if (i == 0)
+            {
+                lineColor = 0xffff00;
+            }
+
+            drawLine(game, this.terrain[i].x1, this.terrain[i].y1, this.terrain[i].x2, this.terrain[i].y2, lineHeight, lineColor);
+        }
     },
 
     // Increase the score
@@ -195,7 +227,7 @@ var mainState = {
         if (this.platform.landed == true)
         {
             this.initializeLander();
-            this.resetPlatform();
+            this.resetTerrain();
         }
 
         // Add a vertical velocity to the lander
