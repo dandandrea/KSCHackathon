@@ -19,6 +19,9 @@ var mainState = {
 
     preload: function() {
         game.load.image('lander', 'assets/lander.png'); 
+        game.load.image('thrust-down', 'assets/thruster-down.png'); 
+        game.load.image('thrust-left', 'assets/thruster-left.png'); 
+        game.load.image('thrust-right', 'assets/thruster-right.png'); 
     },
 
     create: function() {
@@ -97,6 +100,7 @@ var mainState = {
                 return;
             }
 
+            this.lander.body.velocity.x = 0;
             this.lander.body.velocity.y = 0;
             this.lander.y = this.platform.coordinates.y1 - this.lander.height - 1;
         }
@@ -120,6 +124,15 @@ var mainState = {
 
         // Display the lander at a given position
         this.lander = game.add.sprite(this.landerStartX, this.landerStartY, 'lander');
+        
+        this.thrusterDown = this.lander.addChild(game.make.sprite(22, 45, 'thrust-down'));
+        this.thrusterDown.visible = false;
+        
+        this.thrusterLeft = this.lander.addChild(game.make.sprite(-15, 22, 'thrust-left'));
+        this.thrusterLeft.visible = false;
+        
+        this.thrusterRight = this.lander.addChild(game.make.sprite(54, 22, 'thrust-right'));
+        this.thrusterRight.visible = false;
 
         // Add physics to the lander
         // Needed for: movements, gravity, collisions, etc.
@@ -156,15 +169,27 @@ var mainState = {
         {
             this.thrustUp();
         }
+        else
+        {
+            this.thrusterDown.visible = false;
+        }
 
         if (this.cursors.left.isDown == true)
         {
             this.thrustLeft();
         }
+        else
+        {
+            this.thrusterRight.visible = false;
+        }
 
         if (this.cursors.right.isDown == true)
         {
             this.thrustRight();
+        }
+        else
+        {
+            this.thrusterLeft.visible = false;
         }
     },
 
@@ -280,6 +305,8 @@ var mainState = {
 
         // Add a vertical velocity to the lander
         this.lander.body.velocity.y += this.thrustUpAmount * -1;
+        
+        this.thrusterDown.visible = true;
 
         this.gas = this.gas - this.thrustUpAmount;
     },
@@ -289,6 +316,8 @@ var mainState = {
         // Add a vertical velocity to the lander
         this.lander.body.velocity.x += this.thrustSidewaysAmount * -1;
 
+        this.thrusterRight.visible = true;
+        
         this.gas = this.gas - this.thrustSidewaysAmount;
     },
 
@@ -297,6 +326,8 @@ var mainState = {
         // Add a vertical velocity to the lander
         this.lander.body.velocity.x += this.thrustSidewaysAmount;
 
+        this.thrusterLeft.visible = true;
+        
         this.gas = this.gas - this.thrustSidewaysAmount;
     },
 
