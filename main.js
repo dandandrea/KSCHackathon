@@ -15,7 +15,7 @@ var mainState = {
     paddingY: 250,
 
     gasStart: 10000,
-    gasBonus: 500,
+    gasBonus: 250,
 
     preload: function() {
         game.load.image('lander', 'assets/lander.png'); 
